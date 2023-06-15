@@ -8,7 +8,7 @@ for real time developmet.
 To run the 'getRandomNumber' you have to install all dependencies (npm install) and the in a 
 terminal run the following command:
 
-./node_modules/nodemon/bin/nodemon.js index.js 3000
+./node_modules/nodemon/bin/nodemon.js server.js 3000
 
 Once the command is run, the server will start and a random number will be generated, since
 nodemon is installed, if you change the value of the variable 'limitRandomNumber',

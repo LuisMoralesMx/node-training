@@ -22,7 +22,7 @@ const spawnProcess = (command) => {
 
         process.stdout.clearLine(0);
         process.stdout.cursorTo(0);
-        process.stdout.write(stdout);
+        process.stdout.write(stdout + "\r");
     });
 };
 
@@ -37,4 +37,4 @@ setInterval(() => {
         command = 'ps -A -o %cpu,%mem,comm | sort -nr | head -n 1'
     }
     runMonitor(command);
-}, 1000, 5);
+}, 1000, 10);

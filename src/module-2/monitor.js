@@ -6,8 +6,11 @@ This monitor.js runs a command that displays in real time a summary of the curre
 running in the OS.
 */
 
+
 const childProcess = require('child_process');
 const os = require('os');
+const commandWin = 'powershell "Get-Process | Sort-Object CPU -Descending | Select-Object -Property Name, CPU, WorkingSet -First 1 | ForEach-Object { $_.Name + \' \' + $_.CPU + \' \' + $_.WorkingSet }"';
+const commandMacOs = 'ps -A -o %cpu,%mem,comm | sort -nr | head -n 1';
 
 const spawnProcess = (command) => {
     childProcess.exec(command, (error, stdout, stderr) => {
@@ -33,8 +36,16 @@ const runMonitor = () => {
 setInterval(() => {
     let command = '';
 
-    if (process.platform === 'darwin') { // MacOs
-        command = 'ps -A -o %cpu,%mem,comm | sort -nr | head -n 1'
+    switch (process.platform) {
+        case 'darwin':
+            command = commandMacOs; // MacOs Platform
+            break;
+        case 'win32':
+            command = commandWin; // Windows Platform
+            break;
+        default:
+            command = commandMacOs; // Linux Like Platforms
     }
+
     runMonitor(command);
 }, 1000, 10);

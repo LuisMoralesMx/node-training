@@ -8,7 +8,6 @@ running in the OS.
 
 
 const childProcess = require('child_process');
-const os = require('os');
 const commandWin = 'powershell "Get-Process | Sort-Object CPU -Descending | Select-Object -Property Name, CPU, WorkingSet -First 1 | ForEach-Object { $_.Name + \' \' + $_.CPU + \' \' + $_.WorkingSet }"';
 const commandMacOs = 'ps -A -o %cpu,%mem,comm | sort -nr | head -n 1';
 

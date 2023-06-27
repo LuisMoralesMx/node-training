@@ -1,6 +1,6 @@
 /*
 Name: Luis Morales
-Date: Thursday 15, 2023
+Date: Thursday 22, 2023
 
 This monitor.js runs a command that displays in real time a summary of the current processes
 running in the OS.

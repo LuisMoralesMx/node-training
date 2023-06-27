@@ -20,16 +20,13 @@ const express = require('express');
 const app = express();
 const port = 3000
 
+// Imports
+var utils = require('./utils.js');
+
 // Global constants
 var limitRandomNumber = 100;
 
-// Functions
-function getRandomNumber() {
-    var random = Math.floor(Math.random() * limitRandomNumber);
-    return random;
-}
-
 // Executing functions.
-console.log("Your random number is: " + getRandomNumber());
+console.log("Your random number is: " + utils.getRandomNumber(limitRandomNumber));
 
 app.listen(port, () => console.log(`Module 1 app listening on port ${port}!`))

@@ -4,12 +4,13 @@ Date: Thursday 15, 2023
 
 This monitor.js runs a command that displays in real time a summary of the current processes
 running in the OS.
+
+To run the monitor type in console: node monitor.js
 */
 
-
 const childProcess = require('child_process');
-const commandWin = 'powershell "Get-Process | Sort-Object CPU -Descending | Select-Object -Property Name, CPU, WorkingSet -First 1 | ForEach-Object { $_.Name + \' \' + $_.CPU + \' \' + $_.WorkingSet }"';
-const commandMacOs = 'ps -A -o %cpu,%mem,comm | sort -nr | head -n 1';
+const COMMAND_WIN = 'powershell "Get-Process | Sort-Object CPU -Descending | Select-Object -Property Name, CPU, WorkingSet -First 1 | ForEach-Object { $_.Name + \' \' + $_.CPU + \' \' + $_.WorkingSet }"';
+const COMMAND_UNIX_BASE = 'ps -A -o %cpu,%mem,comm | sort -nr | head -n 1';
 
 const spawnProcess = (command) => {
     childProcess.exec(command, (error, stdout, stderr) => {
@@ -28,22 +29,19 @@ const spawnProcess = (command) => {
     });
 };
 
-const runMonitor = () => {
-    spawnProcess('ps -A -o %cpu,%mem,comm | sort -nr | head -n 1');
+const runMonitor = (command) => {
+    spawnProcess(command);
 }
 
 setInterval(() => {
     let command = '';
 
     switch (process.platform) {
-        case 'darwin':
-            command = commandMacOs; // MacOs Platform
-            break;
         case 'win32':
-            command = commandWin; // Windows Platform
+            command = COMMAND_WIN; // Windows Platform
             break;
         default:
-            command = commandMacOs; // Linux Like Platforms
+            command = COMMAND_UNIX_BASE; // Unix Base Platforms
     }
 
     runMonitor(command);

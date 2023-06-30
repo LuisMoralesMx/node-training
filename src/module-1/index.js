@@ -13,11 +13,11 @@ steps:
 	6) Type: getRandomNumber() to generate new numbers.
 */
 
+// Imports
+var utils = require('./utils.js');
+
 // Global constants
 var limitRandomNumber = 100;
 
 // Functions
-function getRandomNumber() {
-    var random = Math.floor(Math.random() * limitRandomNumber);
-    return random;
-}
+utils.getRandomNumber(limitRandomNumber);

@@ -75,45 +75,100 @@ const requestListener = function (req, res) {
                     }
                 });
                 break;
+            } else if (req.method === 'PUT') {
+                body = "";
+                req.on("data", (chunk) => {
+                    body += chunk;
+                });
+
+                req.on("end", () => {
+                    try {
+                        updateUser(users, JSON.parse(body));
+                        res.writeHead(200);
+                        res.end("User Updated");
+                    } catch (ex) {
+                        res.writeHead(400);
+                        res.end(`An error has ocurred: ${ex}`);
+                    }
+                });
+                break;
+            } else if (req.method === 'DELETE') {
+                body = "";
+                req.on("data", (chunk) => {
+                    body += chunk;
+                });
+
+                req.on("end", () => {
+                    try {
+                        deleteUser(users, JSON.parse(body));
+                        res.writeHead(200);
+                        res.end("User Deleted");
+                    } catch (ex) {
+                        res.writeHead(400);
+                        res.end(`An error has ocurred: ${ex}`);
+                    }
+                });
+                break;
             }
 
-        case "/update":
-            body = "";
-            req.on("data", (chunk) => {
-                body += chunk;
-            });
+        case "/hobbies":
+            if (req.method === 'GET') {
+                body = "";
+                req.on("data", (chunk) => {
+                    body += chunk;
+                });
 
-            req.on("end", () => {
-                try {
-                    updateUser(users, JSON.parse(body));
-                    res.writeHead(200);
-                    res.end("User Updated");
-                } catch (ex) {
-                    res.writeHead(400);
-                    res.end(`An error has ocurred: ${ex}`);
-                }
-            });
-            break;
+                req.on("end", () => {
+                    try {
+                        res.end(JSON.stringify(findHobbies(users, JSON.parse(body))));
+                        res.writeHead(200);
+                    } catch (ex) {
+                        res.writeHead(400)
+                        res.end(`An error has ocurred: ${ex}`);
+                    }
 
-        case "/delete":
-            body = "";
-            req.on("data", (chunk) => {
-                body += chunk;
-            });
+                });
+                break;
+            } else if (req.method === 'PUT') {
+                body = "";
+                req.on("data", (chunk) => {
+                    body += chunk;
+                });
 
-            req.on("end", () => {
-                try {
-                    deleteUser(users, JSON.parse(body));
-                    res.writeHead(200);
-                    res.end("User Deleted");
-                } catch (ex) {
-                    res.writeHead(400);
-                    res.end(`An error has ocurred: ${ex}`);
-                }
-            });
-            break;
+                req.on("end", () => {
+                    try {
+                        updateUserHobbies(users, JSON.parse(body));
+                        res.writeHead(200);
+                        res.end("Hobbies Updated");
+                    } catch (ex) {
+                        res.writeHead(400)
+                        res.end(`An error has ocurred: ${ex}`);
+                    }
 
-        case "/find":
+                });
+                break;
+
+            } else if (req.method === 'DELETE') {
+                body = "";
+                req.on("data", (chunk) => {
+                    body += chunk;
+                });
+
+                req.on("end", () => {
+                    try {
+                        deleteUserHobby(users, JSON.parse(body));
+                        res.writeHead(200);
+                        res.end("Hobby Deleted");
+                    } catch (ex) {
+                        res.writeHead(400)
+                        res.end(`An error has ocurred: ${ex}`);
+                    }
+
+                });
+                break;
+            }
+
+        case "/find-user":
             body = "";
             req.on("data", (chunk) => {
                 body += chunk;
@@ -131,61 +186,6 @@ const requestListener = function (req, res) {
             });
             break;
 
-        case "/hobbies":
-            body = "";
-            req.on("data", (chunk) => {
-                body += chunk;
-            });
-
-            req.on("end", () => {
-                try {
-                    res.end(JSON.stringify(findHobbies(users, JSON.parse(body))));
-                    res.writeHead(200);
-                } catch (ex) {
-                    res.writeHead(400)
-                    res.end(`An error has ocurred: ${ex}`);
-                }
-
-            });
-            break;
-
-        case "/updateHobby":
-            body = "";
-            req.on("data", (chunk) => {
-                body += chunk;
-            });
-
-            req.on("end", () => {
-                try {
-                    updateUserHobbies(users, JSON.parse(body));
-                    res.writeHead(200);
-                    res.end("Hobbies Updated");
-                } catch (ex) {
-                    res.writeHead(400)
-                    res.end(`An error has ocurred: ${ex}`);
-                }
-
-            });
-            break;
-
-        case "/deleteHobby":
-            body = "";
-            req.on("data", (chunk) => {
-                body += chunk;
-            });
-
-            req.on("end", () => {
-                try {
-                    deleteUserHobby(users, JSON.parse(body));
-                    res.writeHead(200);
-                    res.end("Hobby Deleted");
-                } catch (ex) {
-                    res.writeHead(400)
-                    res.end(`An error has ocurred: ${ex}`);
-                }
-
-            });
-            break;
         default:
             res.writeHead(404);
             res.end(JSON.stringify({ error: "Resource not found" }));

@@ -26,10 +26,19 @@ The JSON format for a POSTMAN call follows the next structure (depending on the 
     ]
 }
 
+To run the server just type: node server.js
+
 */
 
 const http = require("http");
-const { updateUser, deleteUser, findUser, findHobbies, updateUserHobbies, deleteUserHobby } = require("./utils");
+const {
+    updateUser,
+    deleteUser,
+    findUser,
+    findHobbies,
+    updateUserHobbies,
+    deleteUserHobby,
+} = require("./utils");
 
 const host = "localhost";
 const port = 3000;
@@ -40,98 +49,141 @@ let body = "";
 const requestListener = function (req, res) {
     res.setHeader("Content-Type", "application/json");
 
+    console.log(req.method);
+
     switch (req.url) {
         case "/users":
-            res.writeHead(200);
-            res.end(JSON.stringify(users));
-            break;
-            
-        case "/create":
-            body = "";
-            res.writeHead(200);
-            req.on("data", (chunk) => {
-                body += chunk;
-            });
 
-            req.on("end", () => {
-                users.push(JSON.parse(body));
-                res.end("User Created");
-            });
-            break;
+            if (req.method === 'GET') {
+                res.writeHead(200);
+                res.end(JSON.stringify(users));
+                break;
+            } else if (req.method === 'POST') {
+                body = "";
+                req.on("data", (chunk) => {
+                    body += chunk;
+                });
+
+                req.on("end", () => {
+                    try {
+                        users.push(JSON.parse(body));
+                        res.writeHead(200);
+                        res.end("User Created");
+                    } catch (ex) {
+                        res.writeHead(400);
+                        res.end(`An error has ocurred: ${ex}`);
+                    }
+                });
+                break;
+            }
 
         case "/update":
             body = "";
-            res.writeHead(200);
             req.on("data", (chunk) => {
                 body += chunk;
             });
 
             req.on("end", () => {
-                updateUser(users, JSON.parse(body));
-                res.end("User Updated");
+                try {
+                    updateUser(users, JSON.parse(body));
+                    res.writeHead(200);
+                    res.end("User Updated");
+                } catch (ex) {
+                    res.writeHead(400);
+                    res.end(`An error has ocurred: ${ex}`);
+                }
             });
             break;
 
         case "/delete":
             body = "";
-            res.writeHead(200);
             req.on("data", (chunk) => {
                 body += chunk;
             });
 
             req.on("end", () => {
-                deleteUser(users, JSON.parse(body));
-                res.end("User Deleted");
+                try {
+                    deleteUser(users, JSON.parse(body));
+                    res.writeHead(200);
+                    res.end("User Deleted");
+                } catch (ex) {
+                    res.writeHead(400);
+                    res.end(`An error has ocurred: ${ex}`);
+                }
             });
             break;
 
         case "/find":
             body = "";
-            res.writeHead(200);
             req.on("data", (chunk) => {
                 body += chunk;
             });
 
             req.on("end", () => {
-                res.end(JSON.stringify(findUser(users, JSON.parse(body))));
+                try {
+                    res.end(JSON.stringify(findUser(users, JSON.parse(body))));
+                    res.writeHead(200);
+                }
+                catch (ex) {
+                    res.writeHead(400)
+                    res.end(`An error has ocurred: ${ex}`);
+                }
             });
             break;
 
         case "/hobbies":
             body = "";
-            res.writeHead(200);
             req.on("data", (chunk) => {
                 body += chunk;
             });
 
             req.on("end", () => {
-                res.end(JSON.stringify(findHobbies(users, JSON.parse(body))));
+                try {
+                    res.end(JSON.stringify(findHobbies(users, JSON.parse(body))));
+                    res.writeHead(200);
+                } catch (ex) {
+                    res.writeHead(400)
+                    res.end(`An error has ocurred: ${ex}`);
+                }
+
             });
             break;
 
         case "/updateHobby":
             body = "";
-            res.writeHead(200);
             req.on("data", (chunk) => {
                 body += chunk;
             });
 
             req.on("end", () => {
-                updateUserHobbies(users, JSON.parse(body));
-                res.end("Hobbies Updated");
+                try {
+                    updateUserHobbies(users, JSON.parse(body));
+                    res.writeHead(200);
+                    res.end("Hobbies Updated");
+                } catch (ex) {
+                    res.writeHead(400)
+                    res.end(`An error has ocurred: ${ex}`);
+                }
+
             });
             break;
 
         case "/deleteHobby":
             body = "";
-            res.writeHead(200);
             req.on("data", (chunk) => {
                 body += chunk;
             });
 
             req.on("end", () => {
-                deleteUserHobby(users, JSON.parse(body));
-                res.end("Hobby Deleted");
+                try {
+                    deleteUserHobby(users, JSON.parse(body));
+                    res.writeHead(200);
+                    res.end("Hobby Deleted");
+                } catch (ex) {
+                    res.writeHead(400)
+                    res.end(`An error has ocurred: ${ex}`);
+                }
+
             });
             break;
         default:
